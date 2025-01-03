@@ -6,7 +6,6 @@ export default class LocationsService {
   static async fetchAll() {
     // This function fetches all locations from db
     let locations = await prisma.locations.findMany();
-    console.log("Locations", locations);
     return locations;
   }
 
@@ -15,18 +14,12 @@ export default class LocationsService {
       where: {
         name: location,
       },
+      select: {
+        WeatherRealtime: true,
+      },
     });
-    if (givenLocation) {
-      let realtimeWeather = await prisma.weatherRealtime.findFirst({
-        where: {
-          locationId: givenLocation.id,
-        },
-      });
-      console.log("Realtime", realtimeWeather);
-      return realtimeWeather;
-    } else {
-      return null;
-    }
+    if (!givenLocation) return null;
+    return givenLocation.WeatherRealtime;
   }
   static async fetchAirQuality() {}
   static async fetchForecast() {}
@@ -75,7 +68,6 @@ export default class LocationsService {
       },
     });
 
-    console.log(generated);
     return generated;
   }
 }

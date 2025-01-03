@@ -24,12 +24,14 @@ export default class LocationsController {
       queryParams.location
     );
 
+    console.log("Realtime Weather", realtimeWeather);
+
     if (realtimeWeather == null) {
       return return400(res, "Realtime weather data not found");
     }
     const response = {
       message: "Realtime weather fetched successfully",
-      realtime_weather: realtimeWeather,
+      realtime_weather: { location: queryParams.location, ...realtimeWeather },
     };
     res.statusCode = 200;
     res.setHeader("content-Type", "Application/json");
