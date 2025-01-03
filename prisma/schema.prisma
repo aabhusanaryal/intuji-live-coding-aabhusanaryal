@@ -12,3 +12,42 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model Locations {
+  id              Int               @id @default(autoincrement())
+  name            String
+  latitude        String?
+  longitude       String?
+  WeatherRealtime WeatherRealtime?
+  AirQuality      AirQuality?
+  WeatherForecast WeatherForecast[]
+}
+
+model WeatherRealtime {
+  id          Int       @id @default(autoincrement())
+  location    Locations @relation(fields: [locationsId], references: [id])
+  locationsId Int       @unique
+  temperature Decimal
+  condition   String
+  humidity    Int
+  windSpeed   Decimal
+  updatedAt   DateTime  @updatedAt
+}
+
+model WeatherForecast {
+  id          Int       @id @default(autoincrement())
+  date        DateTime  @default(now())
+  minTemp     Decimal
+  maxTemp     Decimal
+  condition   String
+  location    Locations @relation(fields: [locationsId], references: [id])
+  locationsId Int
+}
+
+model AirQuality {
+  id          Int       @id @default(autoincrement())
+  aqi         Int
+  description String
+  location    Locations @relation(fields: [locationsId], references: [id])
+  locationsId Int       @unique
+}
