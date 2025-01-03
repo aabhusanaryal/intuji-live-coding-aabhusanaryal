@@ -55,7 +55,13 @@ export default class LocationsController {
     res.setHeader("content-Type", "Application/json");
     res.end(JSON.stringify(response));
   }
-  static async generate(req: IncomingMessage, res: ServerResponse) {}
+  static async generate(req: IncomingMessage, res: ServerResponse) {
+    const generated = await LocationsService.generate();
+    const response = { message: "Mock data generated", data: generated };
+    res.statusCode = 200;
+    res.setHeader("content-Type", "Application/json");
+    res.end(JSON.stringify(response));
+  }
 
   //   static async postLocation(req: IncomingMessage, res: ServerResponse) {
   //     let body = "";
