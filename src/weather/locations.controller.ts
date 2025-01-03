@@ -54,7 +54,8 @@ export default class LocationsController {
     }
     const response = {
       message: "Weather forecast fetched successfully",
-      forecast: { location: queryParams.location, ...forecast },
+      location: queryParams.location,
+      forecast,
     };
     res.statusCode = 200;
     res.setHeader("content-Type", "Application/json");
