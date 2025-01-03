@@ -48,15 +48,31 @@ export default class LocationsController {
     res.end(JSON.stringify(response));
   }
   static async getAQ(req: IncomingMessage, res: ServerResponse) {
-    const airQuality = await LocationsService.fetchAirQuality();
+    // Extracting the query param
+    const reqUrl = url.parse(req.url, true);
+    const queryParams = reqUrl.query;
+    if (!queryParams["location"]) {
+      return return400(res, "Location is required in query string");
+    }
+
+    const airQuality = await LocationsService.fetchAirQuality(
+      queryParams.location
+    );
+
+    console.log("Airquality", airQuality);
+
+    if (airQuality == null) {
+      return return400(res, "Air Quality data not found");
+    }
     const response = {
-      message: "Air Quality weather fetched successfully",
-      airquality: airQuality,
+      message: "Air Quality fetched successfully",
+      air_quality: { location: queryParams.location, ...airQuality },
     };
     res.statusCode = 200;
     res.setHeader("content-Type", "Application/json");
     res.end(JSON.stringify(response));
   }
+
   static async generate(req: IncomingMessage, res: ServerResponse) {
     const generated = await LocationsService.generate();
     const response = { message: "Mock data generated", data: generated };

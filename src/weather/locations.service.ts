@@ -21,7 +21,18 @@ export default class LocationsService {
     if (!givenLocation) return null;
     return givenLocation.WeatherRealtime;
   }
-  static async fetchAirQuality() {}
+  static async fetchAirQuality(location: string) {
+    let givenLocation = await prisma.locations.findFirst({
+      where: {
+        name: location,
+      },
+      select: {
+        AirQuality: true,
+      },
+    });
+    if (!givenLocation) return null;
+    return givenLocation.AirQuality;
+  }
   static async fetchForecast() {}
   static async generate() {
     const conditions = ["Good", "Bad", "Fair", "Moderate"];
@@ -55,16 +66,26 @@ export default class LocationsService {
                 ),
                 condition:
                   conditions[
-                    Math.floor(generateRandomNumber(0, conditions.length))
+                    Math.floor(generateRandomNumber(0, conditions.length - 1))
                   ],
               },
             ],
+          },
+        },
+        AirQuality: {
+          create: {
+            aqi: generateRandomNumber(200, 700),
+            description:
+              conditions[
+                Math.floor(generateRandomNumber(0, conditions.length - 1))
+              ],
           },
         },
       },
       include: {
         WeatherForecast: true,
         WeatherRealtime: true,
+        AirQuality: true,
       },
     });
 
