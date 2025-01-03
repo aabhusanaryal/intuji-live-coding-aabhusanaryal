@@ -1,5 +1,9 @@
-const main = () => {
-  console.log(process.env.TEST);
-};
+import http from "http";
 
-main();
+const PORT = process.env.PORT || 3000;
+
+const server = require("./route.ts");
+
+server.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
+});
