@@ -2,6 +2,30 @@
 
 This is a mock API that returns fake weather data
 
+## Installation Steps
+
+Create a postgres database using your preferred method and add the credentials in the `.env` file.
+
+You can also create a postgres instance with Docker by running:
+
+```bash
+$ docker compose build
+
+$ docker compose up -d
+```
+
+Then, install the dependencies with
+
+```bash
+$ npm i
+```
+
+Finally, run the project with
+
+```bash
+$ npm run dev
+```
+
 ## Endpoints
 
 ### Locations
