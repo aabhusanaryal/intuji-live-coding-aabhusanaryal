@@ -38,10 +38,23 @@ export default class LocationsController {
     res.end(JSON.stringify(response));
   }
   static async getForecast(req: IncomingMessage, res: ServerResponse) {
-    const forecast = await LocationsService.fetchForecast();
+    // Extracting the query param
+    const reqUrl = url.parse(req.url, true);
+    const queryParams = reqUrl.query;
+    if (!queryParams["location"]) {
+      return return400(res, "Location is required in query string");
+    }
+
+    const forecast = await LocationsService.fetchForecast(queryParams.location);
+
+    console.log("Forecast", forecast);
+
+    if (forecast == null) {
+      return return400(res, "Weather forecast data not found");
+    }
     const response = {
       message: "Weather forecast fetched successfully",
-      forecast,
+      forecast: { location: queryParams.location, ...forecast },
     };
     res.statusCode = 200;
     res.setHeader("content-Type", "Application/json");

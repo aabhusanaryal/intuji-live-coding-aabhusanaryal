@@ -33,7 +33,18 @@ export default class LocationsService {
     if (!givenLocation) return null;
     return givenLocation.AirQuality;
   }
-  static async fetchForecast() {}
+  static async fetchForecast(location: string) {
+    let givenLocation = await prisma.locations.findFirst({
+      where: {
+        name: location,
+      },
+      select: {
+        WeatherForecast: true,
+      },
+    });
+    if (!givenLocation) return null;
+    return givenLocation.WeatherForecast;
+  }
   static async generate() {
     const conditions = ["Good", "Bad", "Fair", "Moderate"];
     const randomIndex = Math.floor(generateRandomNumber(0, cities.length - 1));
